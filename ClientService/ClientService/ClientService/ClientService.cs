@@ -50,7 +50,7 @@ public class ClientService : IClientService
 
     private async Task GenerateOrder()
     {
-        var order = await _orderService.GenerateOrder();
-        await _orderService.SendOrder(order);
+        // var order = await _orderService.GenerateOrder();
+        // await _orderService.SendOrder(order);
     }
 }

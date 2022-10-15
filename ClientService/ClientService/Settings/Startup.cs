@@ -1,4 +1,6 @@
 ﻿using ClientService.ClientService;
+using ClientService.Services.OrderService;
+using ClientService.Services.RestaurantService;
 
 namespace ClientService.Settings;
 public class Startup
@@ -15,6 +17,8 @@ public class Startup
         
         //todo register services 
 
+        services.AddSingleton<IOrderService, OrderService>();
+        services.AddSingleton<IRestaurantService, RestaurantService>();
         services.AddSingleton<IClientService, ClientService.ClientService>();
         services.AddHostedService<BackgroundTask.BackgroundTask>();
     }

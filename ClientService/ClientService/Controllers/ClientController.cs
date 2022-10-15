@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ClientService.Controllers;
 
 [ApiController]
-[Route("/glovo")]
+[Route("/client")]
 public class ClientController : ControllerBase
 {
     private readonly IClientService _clientService;
