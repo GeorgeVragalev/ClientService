@@ -6,4 +6,9 @@ public static class RandomGenerator
     {
         return Random.Shared.Next(1, max);
     }
+    
+    public static int IndexGenerator(int max)
+    {
+        return Random.Shared.Next(0, max);
+    }
 }

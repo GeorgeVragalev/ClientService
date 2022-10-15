@@ -1,4 +1,4 @@
-﻿namespace ClientService.Models;
+﻿namespace ClientService.Models.Enum;
 
 public enum Status
 {

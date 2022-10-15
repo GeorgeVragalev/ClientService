@@ -2,5 +2,6 @@
 
 public class GroupOrder : BaseEntity
 {
-    public IList<Order> GroupedOrder { get; set; }
+    public int ClientId { get; set; }
+    public IList<Order> Orders { get; set; }
 }

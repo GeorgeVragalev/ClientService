@@ -4,6 +4,6 @@ namespace ClientService.Services.OrderService;
 
 public interface IOrderService
 {
-    public Task<GroupOrder> GenerateOrder();
+    public Task<GroupOrder> GenerateGroupOrder(int clientId);
     public Task SendOrder(GroupOrder order);
 }
