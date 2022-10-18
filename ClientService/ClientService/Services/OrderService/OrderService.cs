@@ -10,6 +10,7 @@ namespace ClientService.Services.OrderService;
 public class OrderService : IOrderService
 {
     private readonly IRestaurantService _restaurantService;
+    private static Mutex _mutex = new();
 
     public OrderService(IRestaurantService restaurantService)
     {
@@ -45,17 +46,20 @@ public class OrderService : IOrderService
         //order from ranmdom number of restuarnts
         if (restaurantData != null)
         {
+            _mutex.WaitOne();
             var groupOrder = new GroupOrder()
             {
                 Id = IdGenerator.GenerateGroupOrderId(),
                 ClientId = clientId,
                 Orders = new List<Order>()
             };
+            _mutex.ReleaseMutex();
             var restaurantsToOrderFrom = Random.Shared.Next(0, restaurantData.Count);
+            
             for (int i = 0; i <= restaurantsToOrderFrom; i++)
             {
                 var restaurant = restaurantData[i];
-                var order = await GenerateOrder(restaurant, groupOrder.ClientId);
+                var order = await GenerateOrder(restaurant, groupOrder.ClientId, groupOrder.Id);
                 order.ClientId = clientId;
 
                 groupOrder.Orders.Add(order);
@@ -67,7 +71,7 @@ public class OrderService : IOrderService
         throw new Exception("No restaurants registered");
     }
 
-    private async Task<Order> GenerateOrder(RestaurantData restaurantData, int clientId)
+    private async Task<Order> GenerateOrder(RestaurantData restaurantData, int clientId, int groupOrderId)
     {
         var foodList = await GenerateOrderFood(restaurantData.Menu);
         var order = new Order
@@ -78,6 +82,7 @@ public class OrderService : IOrderService
             Foods = foodList.Select(f=>f.Id).ToList(),
             MaxWait = CalculateMaxWaitingTime(foodList),
             ClientId = clientId,
+            GroupOrderId = groupOrderId,
             RestaurantId = restaurantData.Id,
             OrderStatusEnum = OrderStatusEnum.IsCooking
         };

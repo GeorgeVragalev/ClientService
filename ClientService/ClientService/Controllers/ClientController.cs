@@ -23,9 +23,9 @@ public class ClientController : ControllerBase
     
     //recieve order from food ordering service and send it to client
     [HttpPost]
-    public void Distribution([FromBody] GroupOrder order)
+    public async Task Distribution([FromBody] GroupOrder order)
     {
-        Console.WriteLine("Order "+ order.Id+" received");
-        _clientService.ServeOrder(order);
+        Console.WriteLine("Group order "+ order.Id+" received");
+        await _clientService.ServeOrder(order);
     }
 }

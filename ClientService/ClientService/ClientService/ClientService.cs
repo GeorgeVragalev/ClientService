@@ -11,6 +11,7 @@ public class ClientService : IClientService
     private readonly IOrderService _orderService;
 
     public static int CurrentClients = 3;
+    private static Mutex _mutex = new();
 
     public ClientService(IRestaurantService restaurantService, IOrderService orderService)
     {
@@ -44,16 +45,20 @@ public class ClientService : IClientService
                 await Task.WhenAll(taskList);
             }
 
-            Thread.Sleep(15000 * Settings.Settings.TimeUnit);
+            Thread.Sleep(20000 * Settings.Settings.TimeUnit);
         }
     }
 
-    public void ServeOrder(GroupOrder groupOrder)
+    public Task ServeOrder(GroupOrder groupOrder)
     {
+        _mutex.WaitOne();
+        
         CurrentClients += 1;
         //Get rating and return response back to food service
 
         //todo refactor dining hall and kitchen to accept type of order (hall/from client side)
+        _mutex.ReleaseMutex();
+        return Task.CompletedTask;
     }
 
     private async Task GenerateOrder(int clientId)
