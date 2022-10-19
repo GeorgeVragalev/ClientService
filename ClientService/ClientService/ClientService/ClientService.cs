@@ -45,7 +45,7 @@ public class ClientService : IClientService
                 await Task.WhenAll(taskList);
             }
 
-            Thread.Sleep(20000 * Settings.Settings.TimeUnit);
+            Thread.Sleep(1000 * Settings.Settings.TimeUnit);
         }
     }
 
@@ -55,8 +55,8 @@ public class ClientService : IClientService
         
         CurrentClients += 1;
         //Get rating and return response back to food service
-
-        //todo refactor dining hall and kitchen to accept type of order (hall/from client side)
+        PrintConsole.Write($"Current clients :{CurrentClients}", ConsoleColor.Magenta);
+            //todo refactor dining hall and kitchen to accept type of order (hall/from client side)
         _mutex.ReleaseMutex();
         return Task.CompletedTask;
     }

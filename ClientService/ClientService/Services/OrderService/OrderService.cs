@@ -26,9 +26,9 @@ public class OrderService : IOrderService
 
             var url = Settings.Settings.GlovoUrl+"/order";
             using var client = new HttpClient();
-
-            await client.PostAsync(url, data);
+            
             PrintConsole.Write($"Group Order {order.Id} with {order.Orders.Count} orders sent to glovo", ConsoleColor.Green);
+            await client.PostAsync(url, data);
         }
         catch (Exception e)
         {
