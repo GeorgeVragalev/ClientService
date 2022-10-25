@@ -28,24 +28,23 @@ public class ClientService : IClientService
             if (CurrentClients >= 3)
             {
                 CurrentClients = 0;
-                //get menu's and store in memory
                 // _restaurantService.GetRestaurantsData();
                 var clientId1 = IdGenerator.GenerateClientId();
                 var clientId2 = IdGenerator.GenerateClientId();
                 var clientId3 = IdGenerator.GenerateClientId();
-                var client1 = Task.Run(() => GenerateOrder(clientId1), cancellationToken);
-                var client2 = Task.Run(() => GenerateOrder(clientId2), cancellationToken);
+                // var client1 = Task.Run(() => GenerateOrder(clientId1), cancellationToken);
+                // var client2 = Task.Run(() => GenerateOrder(clientId2), cancellationToken);
                 var client3 = Task.Run(() => GenerateOrder(clientId3), cancellationToken);
 
                 var taskList = new List<Task>
                 {
-                    client1, client2, client3
+                    client3
                 };
 
                 await Task.WhenAll(taskList);
             }
 
-            Thread.Sleep(1000 * Settings.Settings.TimeUnit);
+            Thread.Sleep(20000 * Settings.Settings.TimeUnit);
         }
     }
 

@@ -41,7 +41,7 @@ public class OrderService : IOrderService
     public async Task<GroupOrder> GenerateGroupOrder(int clientId)
     {
         //get menu's and generate random orders from 2 restaurants
-        var restaurantData = await _restaurantService.GetRestaurantsDummyData();
+        var restaurantData = await _restaurantService.GetRestaurantsData();
 
         //order from ranmdom number of restuarnts
         if (restaurantData != null)
@@ -84,6 +84,9 @@ public class OrderService : IOrderService
             ClientId = clientId,
             GroupOrderId = groupOrderId,
             RestaurantId = restaurantData.Id,
+            OrderType = OrderType.ClientOrder,
+            TableId = 0,
+            WaiterId = 0,
             OrderStatusEnum = OrderStatusEnum.IsCooking
         };
         PrintConsole.Write($"Generated order: {order.Id} waiting time {order.MaxWait}", ConsoleColor.Cyan);
