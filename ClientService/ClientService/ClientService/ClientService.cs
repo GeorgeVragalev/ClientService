@@ -32,13 +32,13 @@ public class ClientService : IClientService
                 var clientId1 = IdGenerator.GenerateClientId();
                 var clientId2 = IdGenerator.GenerateClientId();
                 var clientId3 = IdGenerator.GenerateClientId();
-                // var client1 = Task.Run(() => GenerateOrder(clientId1), cancellationToken);
-                // var client2 = Task.Run(() => GenerateOrder(clientId2), cancellationToken);
+                var client1 = Task.Run(() => GenerateOrder(clientId1), cancellationToken);
+                var client2 = Task.Run(() => GenerateOrder(clientId2), cancellationToken);
                 var client3 = Task.Run(() => GenerateOrder(clientId3), cancellationToken);
 
                 var taskList = new List<Task>
                 {
-                    client3
+                    client1, client2, client3
                 };
 
                 await Task.WhenAll(taskList);
