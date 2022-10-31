@@ -38,4 +38,24 @@ public class RestaurantService : IRestaurantService
             throw;
         }
     }
+    
+    public async Task SubmitRating(OrderRating orderRating)
+    {
+        try
+        {
+            var json = JsonConvert.SerializeObject(orderRating);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var url = Settings.Settings.GlovoUrl+"/rating";
+            using var client = new HttpClient();
+            
+            PrintConsole.Write($"Submitted rating {orderRating.Rating} for order {orderRating.Order.Id} to restaurant {orderRating.Order.RestaurantId}", ConsoleColor.Green);
+            await client.PostAsync(url, data);
+        }
+        catch (Exception e)
+        {
+            PrintConsole.Write(Thread.CurrentThread.Name + " Failed to send order id: " + orderRating.Order.Id,
+                ConsoleColor.DarkRed);
+        }
+    }
 }

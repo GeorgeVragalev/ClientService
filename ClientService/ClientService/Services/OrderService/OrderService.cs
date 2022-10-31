@@ -24,16 +24,31 @@ public class OrderService : IOrderService
             var json = JsonConvert.SerializeObject(order);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var url = Settings.Settings.GlovoUrl+"/order";
+            var url = Settings.Settings.GlovoUrl + "/order";
             using var client = new HttpClient();
-            
-            PrintConsole.Write($"Group Order {order.Id} with {order.Orders.Count} orders sent to glovo", ConsoleColor.Green);
+
+            PrintConsole.Write($"Group Order {order.Id} with {order.Orders.Count} orders sent to glovo",
+                ConsoleColor.Green);
             await client.PostAsync(url, data);
         }
         catch (Exception e)
         {
             PrintConsole.Write(Thread.CurrentThread.Name + " Failed to send order id: " + order.Id,
                 ConsoleColor.DarkRed);
+        }
+    }
+
+    public async Task SubmitOrderRating(GroupOrder groupOrder)
+    {
+        foreach (var order in groupOrder.Orders)
+        {
+            var rating = order.GetOrderRating();
+
+            await _restaurantService.SubmitRating(new OrderRating()
+            {
+                Rating = rating,
+                Order = order
+            });
         }
     }
 
@@ -55,7 +70,7 @@ public class OrderService : IOrderService
             };
             _mutex.ReleaseMutex();
             var restaurantsToOrderFrom = Random.Shared.Next(0, restaurantData.Count);
-            
+
             for (int i = 0; i <= restaurantsToOrderFrom; i++)
             {
                 var restaurant = restaurantData[i];
@@ -79,7 +94,7 @@ public class OrderService : IOrderService
             Id = IdGenerator.GenerateOrderId(),
             Priority = RandomGenerator.NumberGenerator(5),
             PickUpTime = DateTime.Now,
-            Foods = foodList.Select(f=>f.Id).ToList(),
+            Foods = foodList.Select(f => f.Id).ToList(),
             MaxWait = CalculateMaxWaitingTime(foodList),
             ClientId = clientId,
             GroupOrderId = groupOrderId,
@@ -93,7 +108,7 @@ public class OrderService : IOrderService
 
         return await Task.FromResult(order);
     }
-    
+
     private async Task<IList<Food>> GenerateOrderFood(IList<Food> menu)
     {
         var size = RandomGenerator.NumberGenerator(5);
@@ -107,7 +122,7 @@ public class OrderService : IOrderService
 
         return await Task.FromResult(orderFoodList);
     }
-    
+
     private static int CalculateMaxWaitingTime(IList<Food> foodList)
     {
         var maxWaitingTime = 0;

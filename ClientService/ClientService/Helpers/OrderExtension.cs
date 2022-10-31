@@ -4,18 +4,15 @@ namespace ClientService.Helpers;
 
 public static class OrderExtension
 {
-    private static IList<int> ratings = new List<int>();
-
-    public static double GetOrderRating(this Order order)
+    public static int GetOrderRating(this Order order)
     {
         var waitingTime = (DateTime.Now - order.PickUpTime);
         var timeElapsed = SetTimeElapsed(waitingTime);
         var rating = GetRating(timeElapsed, order.MaxWait);
 
-        ratings.Add(rating);
         PrintConsole.Write($"Received rating {rating} from orderId {order.Id} {timeElapsed} | {order.MaxWait}", ConsoleColor.DarkGreen);
 
-        return ratings.Average();
+        return rating;
     }
 
     private static int SetTimeElapsed(TimeSpan time)
@@ -35,7 +32,7 @@ public static class OrderExtension
                 break;
         }
 
-        return timeElapsed/4;
+        return timeElapsed;
     }
 
     private static int GetRating(int timeElapsed, int maxWait)

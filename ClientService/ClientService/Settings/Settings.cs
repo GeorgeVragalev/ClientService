@@ -2,11 +2,8 @@
 
 public static class Settings
 {
-    public static readonly int Tables = 10;
-    public static readonly int Waiters = 5;
-    
-    public static readonly string GlovoUrl = "http://host.docker.internal:7068"; //docker
-    // public static readonly string GlovoUrl = "https://localhost:7068"; //local
+    // public static readonly string GlovoUrl = "http://host.docker.internal:7068"; //docker
+    public static readonly string GlovoUrl = "https://localhost:7068"; //local
     
     public static readonly int TimeUnit = 1; //seconds = 1000  ms = 1 minutes = 60000 
 }

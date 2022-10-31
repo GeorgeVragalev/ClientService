@@ -7,15 +7,13 @@ namespace ClientService.ClientService;
 
 public class ClientService : IClientService
 {
-    private readonly IRestaurantService _restaurantService;
     private readonly IOrderService _orderService;
 
-    public static int CurrentClients = 3;
+    private static int CurrentClients = 3;
     private static Mutex _mutex = new();
 
-    public ClientService(IRestaurantService restaurantService, IOrderService orderService)
+    public ClientService(IOrderService orderService)
     {
-        _restaurantService = restaurantService;
         _orderService = orderService;
     }
 
@@ -25,10 +23,9 @@ public class ClientService : IClientService
         {
             //get the first batch of clients and make orders
             //when the are complete we get another batch
-            if (CurrentClients >= 3)
+            if (CurrentClients >= 0)
             {
-                CurrentClients = 0;
-                // _restaurantService.GetRestaurantsData();
+                CurrentClients -= 3;
                 var clientId1 = IdGenerator.GenerateClientId();
                 var clientId2 = IdGenerator.GenerateClientId();
                 var clientId3 = IdGenerator.GenerateClientId();
@@ -51,12 +48,13 @@ public class ClientService : IClientService
     public Task ServeOrder(GroupOrder groupOrder)
     {
         _mutex.WaitOne();
-        
         CurrentClients += 1;
+        _mutex.ReleaseMutex();
+
         //Get rating and return response back to food service
         PrintConsole.Write($"Current clients :{CurrentClients}", ConsoleColor.Magenta);
-            //todo refactor dining hall and kitchen to accept type of order (hall/from client side)
-        _mutex.ReleaseMutex();
+        _orderService.SubmitOrderRating(groupOrder);
+        
         return Task.CompletedTask;
     }
 
